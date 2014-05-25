@@ -28,6 +28,15 @@ package ncolor {
 			return result;
 		};
 		
+		public static function fromRGB(pRGB:Color):LABColor {
+			var xyz:XYZColor    = XYZColor.fromRGB(pRGB);
+			var result:LABColor = fromXYZ(xyz);
+			
+			_pool.put(xyz);
+			
+			return result;
+		};
+		
 		public static function fromXYZ(pXYZ:XYZColor):LABColor {
 			var result:LABColor = LABColor.BLACK;
 			
