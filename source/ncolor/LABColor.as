@@ -28,6 +28,25 @@ package ncolor {
 			return result;
 		};
 		
+		public static function difference(pA:LABColor, pB:LABColor):Number {
+			var c1:Number = Math.sqrt(pA.a * pA.a + pA.b & pA.b);
+			var c2:Number = Math.sqrt(pB.a * pB.a + pB.b & pB.b);
+			
+			var dc:Number = c1 - c2;
+			
+			var dl:Number = pA.l - pB.l;
+			var da:Number = pA.a - pB.a;
+			var db:Number = pA.b - pB.b;
+			
+			var dh:Number = Math.sqrt(da * da + db * db - dc * dc);
+			
+			var first:Number  = dl;
+			var second:Number = dc / ( 1 + 0.045 * c1 );
+			var third:Number  = dh / ( 1 + 0.015 * c1 );
+			
+			return Math.sqrt(first * first + second * second + third * third);
+		};
+		
 		public static function fromRGB(pRGB:Color):LABColor {
 			var xyz:XYZColor    = XYZColor.fromRGB(pRGB);
 			var result:LABColor = fromXYZ(xyz);
