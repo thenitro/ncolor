@@ -8,7 +8,7 @@ package ncolor {
 		private static var _pool:Pool = Pool.getInstance();
 		
 		public static const MAX:int = 255;
-		public static const MIN:int = 255;
+		public static const MIN:int =   0;
 		
 		private var _r:int;
 		private var _g:int;
@@ -18,6 +18,84 @@ package ncolor {
 			r = pR;
 			g = pG;
 			b = pB;
+		};
+		
+		public static function get BLACK():Color {
+			var result:Color = _pool.get(Color) as Color;
+			
+			if (!result) {
+				_pool.allocate(Color, 1);
+				result = new Color();
+			}
+			
+			return result;
+		};
+		
+		public static function get RANDOM():Color {
+			var result:Color = BLACK;
+				result.random();
+			
+			return result;
+		};
+		
+		public static function fromHSV(pInput:HSVColor):Color {
+			var result:Color = Color.BLACK;
+			
+			var r:Number = 0;
+			var g:Number = 0;
+			var b:Number = 0;
+			
+			var h:int    = pInput.h * 6;
+			var f:Number = pInput.h * 6 - h;
+			var p:Number = pInput.v * (1 - pInput.s);
+			var q:Number = pInput.v * (1 - f * pInput.s);
+			var t:Number = pInput.v * (1 - (1 - f) * pInput.s);
+			
+			if (h == 0) {
+				r = pInput.v;
+				g = t;
+				b = p;
+			}
+			
+			if (h == 1) {
+				r = q;
+				g = pInput.v;
+				b = p;
+			}
+			
+			if (h == 2) {
+				r = p;
+				g = pInput.v;
+				b = t;
+			}
+			
+			if (h == 3) {
+				r = p;
+				g = q;
+				b = pInput.v;
+			}
+			
+			if (h == 4) {
+				r = t;
+				g = p;
+				b = pInput.v;
+			}
+			
+			if (h == 5) {
+				r = pInput.v;
+				g = p;
+				b = q;
+			}
+			
+			result.r = r * 256;
+			result.g = g * 256;
+			result.b = b * 256;
+			
+			return result;
+		};
+		
+		public function get reflection():Class {
+			return Color;
 		};
 		
 		public function set r(pValue:int):void {
@@ -44,19 +122,25 @@ package ncolor {
 			return _b;
 		};
 		
-		public function get BLACK():Color {
-			var result:Color = _pool.get(Color) as Color;
-			
-			if (!result) {
-				_pool.allocate(Color, 1);
-				result = new Color();
-			}
-			
-			return result;
+		public function get hex():uint {
+			return _r << 16 | _g << 8 | _b;
 		};
 		
-		public function get reflection():Class {
-			return Color;
+		public function random():void {
+			r = int(Math.random() * MAX);
+			g = int(Math.random() * MAX);
+			b = int(Math.random() * MAX);
+		};
+		
+		public function randomOffset(pOffset:int):void {
+			var middle:Number     = (r + g + b) / 3;
+			var randomized:Number = middle + 2 * Math.random() * pOffset - pOffset;
+			
+			var ratio:Number = randomized / middle;
+			
+			r = r * ratio;
+			g = g * ratio;
+			b = b * ratio;
 		};
 		
 		public function poolPrepare():void {
@@ -65,6 +149,10 @@ package ncolor {
 		
 		public function dispose():void {
 			
+		};
+		
+		public function toString():String {
+			return "[ Color r= " + r + ", g=" + g + ", b=" + b + " ]"
 		};
 	}
 }
