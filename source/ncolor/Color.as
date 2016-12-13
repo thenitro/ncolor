@@ -1,9 +1,9 @@
 package ncolor {
-	import nmath.TMath;
-	
+	import nmath.NMath;
+
 	import npooling.IReusable;
 	import npooling.Pool;
-	
+
 	public final class Color implements IReusable {
 		private static var _pool:Pool = Pool.getInstance();
 		
@@ -13,6 +13,8 @@ package ncolor {
 		private var _r:int;
 		private var _g:int;
 		private var _b:int;
+
+		private var _disposed:Boolean;
 		
 		public function Color(pR:int = 0, pG:int = 0, pB:int = 0) {
 			r = pR;
@@ -97,9 +99,13 @@ package ncolor {
 		public function get reflection():Class {
 			return Color;
 		};
+
+		public function get disposed():Boolean {
+		    return _disposed;
+		};
 		
 		public function set r(pValue:int):void {
-			_r = TMath.clamp(pValue, MIN, MAX);
+			_r = NMath.clamp(pValue, MIN, MAX);
 		};
 		
 		public function get r():int {
@@ -107,7 +113,7 @@ package ncolor {
 		};
 		
 		public function set g(pValue:int):void {
-			_g = TMath.clamp(pValue, MIN, MAX);
+			_g = NMath.clamp(pValue, MIN, MAX);
 		};
 		
 		public function get g():int {
@@ -115,7 +121,7 @@ package ncolor {
 		};
 		
 		public function set b(pValue:int):void {
-			_b = TMath.clamp(pValue, MIN, MAX);
+			_b = NMath.clamp(pValue, MIN, MAX);
 		};
 		
 		public function get b():int {
@@ -125,6 +131,12 @@ package ncolor {
 		public function get hex():uint {
 			return _r << 16 | _g << 8 | _b;
 		};
+
+		public function set hex(pValue:uint):void {
+			_r = (pValue >> 16) & 0xFF;
+			_g = (pValue >> 8) & 0xFF;
+			_b =  pValue & 0xFF;
+		}
 		
 		public function random():void {
 			r = int(Math.random() * MAX);
@@ -148,7 +160,7 @@ package ncolor {
 		};
 		
 		public function dispose():void {
-			
+			_disposed = true;
 		};
 		
 		public function toString():String {
