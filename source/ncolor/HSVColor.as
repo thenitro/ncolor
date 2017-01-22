@@ -6,7 +6,7 @@ package ncolor {
         public var s:Number;
         public var v:Number;
 
-        private var _disposed;
+        private var _disposed:Boolean;
 
         public function HSVColor(pH:Number = 0.0, pS:Number = 0.0, pV:Number = 0.0) {
             h = pH;
