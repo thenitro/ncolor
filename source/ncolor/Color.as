@@ -23,14 +23,7 @@ package ncolor {
 		};
 		
 		public static function get BLACK():Color {
-			var result:Color = _pool.get(Color) as Color;
-			
-			if (!result) {
-				_pool.allocate(Color, 1);
-				result = new Color();
-			}
-			
-			return result;
+			return _pool.get(Color) as Color;
 		};
 		
 		public static function get RANDOM():Color {
